@@ -1,0 +1,3 @@
+[submodule "src/modules/authentication"]
+	path = src/modules/authentication
+	url = git@github.com:satrujit11/node-js-authentication.git
