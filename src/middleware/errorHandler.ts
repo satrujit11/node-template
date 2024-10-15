@@ -46,6 +46,8 @@ export const handleErrorMiddleware = (
     return res.status(500).json(response);
   }
 
+  console.log(err);
+
   // Other errors
   const response = ErrorResponseSchema.parse({
     message: "Internal server error",

@@ -2,6 +2,7 @@ import 'express-async-errors'
 import express from "express";
 import dotenv from "dotenv";
 import path from "path";
+import cors from 'cors';
 import router from "./routes/router";
 import startServer from "./server";
 import { handleErrorMiddleware } from "./middleware/errorHandler";
@@ -14,7 +15,11 @@ dotenv.config({ path: path.resolve(__dirname, `../${envFile}`) });
 const app = express();
 const port = Number(process.env.PORT) || 3000;
 
+app.use(cors());
+app.options('*', cors());
+
 app.use(express.json())
+
 app.use("/api", router)
 app.use(handleErrorMiddleware)
 
