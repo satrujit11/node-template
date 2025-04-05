@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import { z } from "zod";
-import { ErrorResponseSchema } from "../types/apiResponse";
-import { ErrorCodes } from "../constants/errorCodes";
+import { ErrorResponseSchema } from "../interfaces/apiResponse";
 import { CustomError } from "../utils/customError";
+import { ErrorCodes } from "../constants/errorCode.enum";
 
 export const handleErrorMiddleware = (
   err: unknown,

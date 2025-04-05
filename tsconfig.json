@@ -10,9 +10,9 @@
     "forceConsistentCasingInFileNames": true, // Disallow inconsistently-cased references to the same file
     "types": ["node", "express"],              // Specify the types to include
     "moduleResolution": "node",                  // Use Node's module resolution strategy
-    "typeRoots": ["./types","./node_modules/@types"]
+    "typeRoots": ["./node_modules/@types"]
   },
-  "include": ["src", "types"],                          // Include source files in the specified directory
+  "include": ["src"],                          // Include source files in the specified directory
   "exclude": ["node_modules"]                  // Exclude node_modules from compilation
 }
 

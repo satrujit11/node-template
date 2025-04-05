@@ -1,6 +1,6 @@
 import { Model, FilterQuery, Types } from "mongoose";
-import { ErrorResponse, ErrorResponseSchema } from "../types/apiResponse";
-import { ErrorCodes } from "../constants/errorCodes";
+import { ErrorResponse, ErrorResponseSchema } from "../interfaces/apiResponse";
+import { ErrorCodes } from "../constants/errorCode.enum";
 
 export async function assertUnique<T>(
   model: Model<T>,

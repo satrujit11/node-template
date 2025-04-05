@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { Model, Types } from "mongoose";
 import { assertExists, assertUnique } from "../utils/assertConditions";
-import { ErrorResponseSchema } from "../types/apiResponse";
+import { ErrorResponseSchema } from "../interfaces/apiResponse";
 
 export function checkUnique<T>(
   model: Model<T>,

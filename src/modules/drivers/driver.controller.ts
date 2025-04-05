@@ -1,4 +1,4 @@
-import { SuccessResponseSchema } from "../../types/apiResponse";
+import { SuccessResponseSchema } from "../../interfaces/apiResponse";
 import { buildPaginationOptions } from "../../utils/buildPaginationOptions";
 import catchAsync from "../../utils/catchAsync";
 import { driverPartialSchema, driverSchema } from "./driver.interface";
