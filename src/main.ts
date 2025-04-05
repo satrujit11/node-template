@@ -24,6 +24,3 @@ app.use("/api", router)
 app.use(handleErrorMiddleware)
 
 startServer(app, port, nodeEnv)
-
-
-
