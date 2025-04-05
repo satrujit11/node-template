@@ -1,5 +1,5 @@
 import { Router } from "express";
-import routerDriver from "../../modules/driver/driver.router";
+import routerDriver from "../../modules/drivers/driver.router";
 
 const routerV1 = Router()
 
