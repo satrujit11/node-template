@@ -3,8 +3,8 @@ import { buildPaginationOptions } from "../../utils/buildPaginationOptions";
 import catchAsync from "../../utils/catchAsync";
 import { driverPartialSchema, driverSchema } from "./driver.interface";
 import { driverAggregates, driverQueries } from "./driver.query";
-import { DriverService } from "./driver.service";
 import { Request, Response } from "express";
+import DriverService from "./driver.service";
 
 
 class DriverController {

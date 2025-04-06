@@ -3,7 +3,7 @@ import { DriverInput } from './driver.interface';
 import { PaginationModel, PaginationOptions } from 'mongoose-paginate-ts';
 import mongoose from 'mongoose';
 
-export class DriverService {
+class DriverService {
   async index(
     options: PaginationOptions
   ): Promise<PaginationModel<DriverType> | undefined> {
@@ -48,3 +48,4 @@ export class DriverService {
   }
 }
 
+export default DriverService;

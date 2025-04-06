@@ -24,14 +24,18 @@ export function checkUnique<T>(
 
 export function checkExists<T>(
   model: Model<T>,
-  field: keyof T, // default param key
-  location: "params" | "query" = "params",
-  customMessage = "Resource not found"
+  modelKey: keyof T | string, // actual DB field to query
+  location: "params" | "query" | "body" = "params",
+  customMessage = "Resource not found",
+  requestKey?: string // optional: where to pull value from (defaults to modelKey)
 ) {
   return async (req: Request, res: Response, next: NextFunction) => {
-    const value = req[location]?.[field as string];
-    if (!value) return next(); // skip if value isn't preset
-    const response = await assertExists(model, field, value, customMessage);
+    const key = requestKey || modelKey;
+    const value = req[location]?.[key as string];
+
+    if (!value) return next(); // skip if value not present
+
+    const response = await assertExists(model, modelKey as keyof T, value, customMessage);
 
     const parsedError = ErrorResponseSchema.safeParse(response);
     if (parsedError.success) {
@@ -43,3 +47,4 @@ export function checkExists<T>(
     next();
   };
 }
+

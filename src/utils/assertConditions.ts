@@ -43,8 +43,6 @@ export async function assertExists<T>(
 
   const filter: FilterQuery<T> = { [field]: value } as FilterQuery<T>;
   const doc = await model.findOne(filter);
-  console.log("Doc", doc);
-
   if (doc === null) {
     return ErrorResponseSchema.parse({
       message,
