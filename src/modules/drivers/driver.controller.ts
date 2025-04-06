@@ -3,14 +3,14 @@ import { buildPaginationOptions } from "../../utils/buildPaginationOptions";
 import catchAsync from "../../utils/catchAsync";
 import { driverPartialSchema, driverSchema } from "./driver.interface";
 import { driverAggregates, driverQueries } from "./driver.query";
-import { Request, Response } from "express";
 import DriverService from "./driver.service";
+import { MRequest, MResponse } from "../../types/express";
 
 
 class DriverController {
   driverService = new DriverService();
 
-  index = catchAsync(async (req: Request, res: Response) => {
+  index = catchAsync(async (req: MRequest, res: MResponse) => {
     const options = buildPaginationOptions(req, {
       allowedQueryFields: driverQueries,
       predefinedAggregates: driverAggregates,
@@ -23,7 +23,7 @@ class DriverController {
     res.status(200).json(response);
   })
 
-  show = catchAsync(async (req: Request, res: Response) => {
+  show = catchAsync(async (req: MRequest, res: MResponse) => {
     const driverId = req.params._id;
     const options = buildPaginationOptions(req, {
       allowedQueryFields: driverQueries,
@@ -38,7 +38,7 @@ class DriverController {
     res.status(200).json(response);
   })
 
-  create = catchAsync(async (req: Request, res: Response) => {
+  create = catchAsync(async (req: MRequest, res: MResponse) => {
     const parsedPayload = driverSchema.parse(req.body);
     const driver = await this.driverService.create(parsedPayload);
     const response = SuccessResponseSchema.parse({
@@ -48,7 +48,7 @@ class DriverController {
     res.status(201).json(response);
   })
 
-  update = catchAsync(async (req: Request, res: Response) => {
+  update = catchAsync(async (req: MRequest, res: MResponse) => {
     const driverId = req.params._id;
     const parsedPayload = driverPartialSchema.parse(req.body);
     const driver = await this.driverService.update(driverId, parsedPayload);
@@ -59,7 +59,7 @@ class DriverController {
     res.status(200).json(response);
   })
 
-  delete = catchAsync(async (req: Request, res: Response) => {
+  delete = catchAsync(async (req: MRequest, res: MResponse) => {
     const driverId = req.params._id;
     const driver = await this.driverService.delete(driverId);
     const response = SuccessResponseSchema.parse({
@@ -68,8 +68,6 @@ class DriverController {
     });
     res.status(200).json(response);
   })
-
-
 }
 
 export default DriverController;

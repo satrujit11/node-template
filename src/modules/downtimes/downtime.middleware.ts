@@ -1,11 +1,12 @@
-import { Request, Response, NextFunction } from "express";
+import { NextFunction } from "express";
 import { downtimePartialSchema } from "./downtime.interface";
-import { Downtime } from "./downtime.model";
+import { Downtime, DowntimeType } from "./downtime.model";
 import { ErrorResponseSchema } from "../../interfaces/apiResponse";
 import { ErrorCodes } from "../../constants/errorCode.enum";
+import { MRequest, MResponse } from "../../types/express";
 
 class DowntimeMiddleware {
-  async activeDowntimeExists(req: Request, res: Response, next: NextFunction) {
+  async activeDowntimeExists(req: MRequest, res: MResponse, next: NextFunction) {
     const parsedBody = downtimePartialSchema.parse(req.body);
     const { vehicleId } = parsedBody;
 
@@ -19,12 +20,14 @@ class DowntimeMiddleware {
         ErrorResponseSchema.parse({
           message: "Active downtime not found",
           error: {
-            code: "NOT_FOUND",
+            code: ErrorCodes.NOT_FOUND,
             details: { vehicleId },
           },
         })
       );
     }
+
+    req.foundDoc = activeDowntime as DowntimeType;
 
     next();
   }

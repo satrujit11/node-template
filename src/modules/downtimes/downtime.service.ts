@@ -46,20 +46,6 @@ class DowntimeService {
   async delete(downtimeId: string): Promise<DowntimeInput | null> {
     return await Downtime.findByIdAndDelete(downtimeId).exec();
   }
-
-  async updateActiveByVehicle(vehicleId: mongoose.Types.ObjectId, updatePayload: Partial<DowntimeInput>) {
-    const activeDowntime = await Downtime.findOne({
-      vehicleId,
-      endTime: { $exists: false }, // OR use: endTime: null
-    });
-
-    if (!activeDowntime) {
-      throw new Error("No active downtime found for this vehicle.");
-    }
-
-    Object.assign(activeDowntime, updatePayload);
-    return await activeDowntime.save();
-  }
 }
 
 export default DowntimeService;

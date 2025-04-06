@@ -1,18 +1,16 @@
 import { SuccessResponseSchema } from "../../interfaces/apiResponse";
 import { buildPaginationOptions } from "../../utils/buildPaginationOptions";
 import catchAsync from "../../utils/catchAsync";
-import { createDowntimeSchema, downtimePartialSchema, downtimeSchema } from "./downtime.interface";
+import { createDowntimeSchema, downtimePartialSchema } from "./downtime.interface";
 import { downtimeAggregates, downtimeQueries } from "./downtime.query";
-import { Request, Response } from "express";
 import DowntimeService from "./downtime.service";
-import mongoose, { Schema } from "mongoose";
-import { Downtime } from "./downtime.model";
-
+import { MRequest, MResponse } from "../../types/express";
+import { DowntimeType } from "./downtime.model";
 
 class DowntimeController {
   downtimeService = new DowntimeService();
 
-  index = catchAsync(async (req: Request, res: Response) => {
+  index = catchAsync(async (req: MRequest, res: MResponse) => {
     const options = buildPaginationOptions(req, {
       allowedQueryFields: downtimeQueries,
       predefinedAggregates: downtimeAggregates,
@@ -25,7 +23,7 @@ class DowntimeController {
     res.status(200).json(response);
   })
 
-  show = catchAsync(async (req: Request, res: Response) => {
+  show = catchAsync(async (req: MRequest, res: MResponse) => {
     const downtimeId = req.params._id;
     const options = buildPaginationOptions(req, {
       allowedQueryFields: downtimeQueries,
@@ -40,7 +38,7 @@ class DowntimeController {
     res.status(200).json(response);
   })
 
-  create = catchAsync(async (req: Request, res: Response) => {
+  create = catchAsync(async (req: MRequest, res: MResponse) => {
     const parsedPayload = createDowntimeSchema.parse(req.body);
     const downtime = await this.downtimeService.create(parsedPayload);
     const response = SuccessResponseSchema.parse({
@@ -50,30 +48,19 @@ class DowntimeController {
     res.status(201).json(response);
   })
 
-  update = catchAsync(async (req: Request, res: Response) => {
+  update = catchAsync(async (req: MRequest, res: MResponse) => {
     const parsedPayload = downtimePartialSchema.parse(req.body);
-    const { vehicleId } = parsedPayload;
-    const { _id } = req.params;
-
-    let downtime;
-
-    if (_id) {
-      downtime = await this.downtimeService.update(_id, parsedPayload);
-    } else if (vehicleId) {
-      downtime = await this.downtimeService.updateActiveByVehicle(vehicleId, parsedPayload);
-    } else {
-      throw new Error("Either downtimeId (in params) or vehicleId (in body) must be provided.");
-    }
-
+    const downtime = req.foundDoc as DowntimeType;
+    const updatedDowntime = await this.downtimeService.update(downtime._id, parsedPayload);
     const response = SuccessResponseSchema.parse({
       message: "Downtime updated successfully",
-      data: downtime,
+      data: updatedDowntime,
     });
     res.status(200).json(response);
   });
 
 
-  delete = catchAsync(async (req: Request, res: Response) => {
+  delete = catchAsync(async (req: MRequest, res: MResponse) => {
     const downtimeId = req.params._id;
     const downtime = await this.downtimeService.delete(downtimeId);
     const response = SuccessResponseSchema.parse({

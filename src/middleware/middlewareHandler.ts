@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { Model, Types } from "mongoose";
 import { assertExists, assertUnique } from "../utils/assertConditions";
 import { ErrorResponseSchema } from "../interfaces/apiResponse";
+import { MRequest } from "../types/express";
 
 export function checkUnique<T>(
   model: Model<T>,
@@ -9,7 +10,7 @@ export function checkUnique<T>(
   location: "body" | "query" | "params" = "body",
   customMessage = "Duplicate entry"
 ) {
-  return async (req: Request, res: Response, next: NextFunction) => {
+  return async (req: MRequest, res: Response, next: NextFunction) => {
     const value = req[location]?.[field as string];
     if (!value) return next(); // skip if value isn't present
     const response = await assertUnique(model, field, value, customMessage);
@@ -29,7 +30,7 @@ export function checkExists<T>(
   customMessage = "Resource not found",
   requestKey?: string // optional: where to pull value from (defaults to modelKey)
 ) {
-  return async (req: Request, res: Response, next: NextFunction) => {
+  return async (req: MRequest, res: Response, next: NextFunction) => {
     const key = requestKey || modelKey;
     const value = req[location]?.[key as string];
 

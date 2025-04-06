@@ -3,10 +3,11 @@ import { z } from "zod";
 import { ErrorResponseSchema } from "../interfaces/apiResponse";
 import { CustomError } from "../utils/customError";
 import { ErrorCodes } from "../constants/errorCode.enum";
+import { MRequest } from "../types/express";
 
 export const handleErrorMiddleware = (
   err: unknown,
-  _req: Request,
+  _req: MRequest,
   res: Response,
   _next: NextFunction
 ): Response => {

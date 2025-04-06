@@ -1,8 +1,9 @@
-export { };
+import { Request, Response } from "express";
 
-declare namespace Express {
-  export interface Request {
-    userId: string;
-    foundDoc: unknown;
-  }
+export interface MRequest extends Request {
+  userId?: string;
+  foundDoc?: unknown;
 }
+
+export interface MResponse extends Response { }
+

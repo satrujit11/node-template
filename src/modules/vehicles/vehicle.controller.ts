@@ -3,14 +3,14 @@ import { buildPaginationOptions } from "../../utils/buildPaginationOptions";
 import catchAsync from "../../utils/catchAsync";
 import { vehiclePartialSchema, vehicleSchema } from "./vehicle.interface";
 import { vehicleAggregates, vehicleQueries } from "./vehicle.query";
-import { Request, Response } from "express";
 import VehicleService from "./vehicle.service";
+import { MRequest, MResponse } from "../../types/express";
 
 
 class VehicleController {
   vehicleService = new VehicleService();
 
-  index = catchAsync(async (req: Request, res: Response) => {
+  index = catchAsync(async (req: MRequest, res: MResponse) => {
     const options = buildPaginationOptions(req, {
       allowedQueryFields: vehicleQueries,
       predefinedAggregates: vehicleAggregates,
@@ -23,7 +23,7 @@ class VehicleController {
     res.status(200).json(response);
   })
 
-  show = catchAsync(async (req: Request, res: Response) => {
+  show = catchAsync(async (req: MRequest, res: MResponse) => {
     const vehicleId = req.params._id;
     const options = buildPaginationOptions(req, {
       allowedQueryFields: vehicleQueries,
@@ -38,7 +38,7 @@ class VehicleController {
     res.status(200).json(response);
   })
 
-  create = catchAsync(async (req: Request, res: Response) => {
+  create = catchAsync(async (req: MRequest, res: MResponse) => {
     const parsedPayload = vehicleSchema.parse(req.body);
     const vehicle = await this.vehicleService.create(parsedPayload);
     const response = SuccessResponseSchema.parse({
@@ -48,7 +48,7 @@ class VehicleController {
     res.status(201).json(response);
   })
 
-  update = catchAsync(async (req: Request, res: Response) => {
+  update = catchAsync(async (req: MRequest, res: MResponse) => {
     const vehicleId = req.params._id;
     const parsedPayload = vehiclePartialSchema.parse(req.body);
     const vehicle = await this.vehicleService.update(vehicleId, parsedPayload);
@@ -59,7 +59,7 @@ class VehicleController {
     res.status(200).json(response);
   })
 
-  delete = catchAsync(async (req: Request, res: Response) => {
+  delete = catchAsync(async (req: MRequest, res: MResponse) => {
     const vehicleId = req.params._id;
     const vehicle = await this.vehicleService.delete(vehicleId);
     const response = SuccessResponseSchema.parse({
@@ -68,8 +68,6 @@ class VehicleController {
     });
     res.status(200).json(response);
   })
-
-
 }
 
 export default VehicleController;

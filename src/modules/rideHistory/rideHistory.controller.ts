@@ -3,14 +3,14 @@ import { buildPaginationOptions } from "../../utils/buildPaginationOptions";
 import catchAsync from "../../utils/catchAsync";
 import { createRideHistorySchema, rideHistoryPartialSchema } from "./rideHistory.interface";
 import { rideHistoryAggregates, rideHistoryQueries } from "./rideHistory.query";
-import { Request, Response } from "express";
 import RideHistoryService from "./rideHistory.service";
+import { MRequest, MResponse } from "../../types/express";
 
 
 class RideHistoryController {
   rideHistoryService = new RideHistoryService();
 
-  index = catchAsync(async (req: Request, res: Response) => {
+  index = catchAsync(async (req: MRequest, res: MResponse) => {
     const options = buildPaginationOptions(req, {
       allowedQueryFields: rideHistoryQueries,
       predefinedAggregates: rideHistoryAggregates,
@@ -23,7 +23,7 @@ class RideHistoryController {
     res.status(200).json(response);
   })
 
-  show = catchAsync(async (req: Request, res: Response) => {
+  show = catchAsync(async (req: MRequest, res: MResponse) => {
     const rideHistoryId = req.params._id;
     const options = buildPaginationOptions(req, {
       allowedQueryFields: rideHistoryQueries,
@@ -38,7 +38,7 @@ class RideHistoryController {
     res.status(200).json(response);
   })
 
-  create = catchAsync(async (req: Request, res: Response) => {
+  create = catchAsync(async (req: MRequest, res: MResponse) => {
     const parsedPayload = createRideHistorySchema.parse(req.body);
     const rideHistory = await this.rideHistoryService.create(parsedPayload);
     const response = SuccessResponseSchema.parse({
@@ -48,7 +48,7 @@ class RideHistoryController {
     res.status(201).json(response);
   })
 
-  update = catchAsync(async (req: Request, res: Response) => {
+  update = catchAsync(async (req: MRequest, res: MResponse) => {
     const rideHistoryId = req.params._id;
     const parsedPayload = rideHistoryPartialSchema.parse(req.body);
     const rideHistory = await this.rideHistoryService.update(rideHistoryId, parsedPayload);
@@ -59,7 +59,7 @@ class RideHistoryController {
     res.status(200).json(response);
   })
 
-  delete = catchAsync(async (req: Request, res: Response) => {
+  delete = catchAsync(async (req: MRequest, res: MResponse) => {
     const rideHistoryId = req.params._id;
     const rideHistory = await this.rideHistoryService.delete(rideHistoryId);
     const response = SuccessResponseSchema.parse({
@@ -68,8 +68,6 @@ class RideHistoryController {
     });
     res.status(200).json(response);
   })
-
-
 }
 
 export default RideHistoryController;
