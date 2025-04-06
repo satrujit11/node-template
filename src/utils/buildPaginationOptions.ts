@@ -20,7 +20,11 @@ export function buildPaginationOptions(
   }
 
   if (req.query.populate) {
-    options.populate = req.query.populate as string;
+    if (Array.isArray(req.query.populate)) {
+      options.populate = req.query.populate.join(' ');
+    } else if (typeof req.query.populate === 'string') {
+      options.populate = req.query.populate.split(',').join(' ');
+    }
   }
 
   if (req.query.projection) {
@@ -72,15 +76,23 @@ export function buildPaginationOptions(
     }
   }
 
-  // 🔐 Safe Aggregation — allowed in both modes
+  // 🔐 Safe Aggregation — MULTIPLE aggregates
   if (config.predefinedAggregates && req.query.aggregate) {
-    const requestedAggregate = req.query.aggregate as string;
-    if (config.predefinedAggregates[requestedAggregate]) {
-      options.aggregate = config.predefinedAggregates[requestedAggregate];
-    } else {
-      throw new Error(`Invalid aggregate: ${requestedAggregate}`);
-    }
+    const requested = req.query.aggregate as string | string[] | undefined;
+    const keys = Array.isArray(requested)
+      ? requested
+      : (requested as string).split(",");
+
+    const validPipelines = keys.flatMap(key => {
+      if (!config.predefinedAggregates![key]) {
+        throw new Error(`Invalid aggregate: ${key}`);
+      }
+      return config.predefinedAggregates![key];
+    });
+
+    options.aggregate = validPipelines;
   }
+
 
   return options;
 }

@@ -5,6 +5,7 @@ import { createRideHistorySchema, rideHistoryPartialSchema } from "./rideHistory
 import { rideHistoryAggregates, rideHistoryQueries } from "./rideHistory.query";
 import RideHistoryService from "./rideHistory.service";
 import { MRequest, MResponse } from "../../types/express";
+import { RideHistoryType } from "./rideHistory.model";
 
 
 class RideHistoryController {
@@ -49,12 +50,12 @@ class RideHistoryController {
   })
 
   update = catchAsync(async (req: MRequest, res: MResponse) => {
-    const rideHistoryId = req.params._id;
     const parsedPayload = rideHistoryPartialSchema.parse(req.body);
-    const rideHistory = await this.rideHistoryService.update(rideHistoryId, parsedPayload);
+    const rideHistory = req.foundDoc as RideHistoryType;
+    const updatedRideHistory = await this.rideHistoryService.update(rideHistory._id, parsedPayload);
     const response = SuccessResponseSchema.parse({
       message: "RideHistory updated successfully",
-      data: rideHistory,
+      data: updatedRideHistory,
     });
     res.status(200).json(response);
   })

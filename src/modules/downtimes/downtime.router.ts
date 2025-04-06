@@ -1,6 +1,6 @@
 import { Router } from "express";
 import DowntimeController from "./downtime.controller";
-import { checkExists, checkUnique } from "../../middleware/middlewareHandler";
+import { checkExists } from "../../middleware/middlewareHandler";
 import { Downtime } from "./downtime.model";
 import { Vehicle } from "../vehicles/vehicle.model";
 import DowntimeMiddleware from "./downtime.middleware";

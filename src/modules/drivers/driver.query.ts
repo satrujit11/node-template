@@ -11,10 +11,22 @@ export const driverAggregates = {
       }
     },
     {
+      $addFields: {
+        activeRides: {
+          $filter: {
+            input: "$rideHistories",
+            as: "ride",
+            cond: { $not: ["$$ride.endTime"] }
+          }
+        }
+      }
+    },
+    {
       $match: {
-        "rideHistories.endTime": { $exists: false }
+        "activeRides.0": { $exists: true } // Means there is at least one active ride
       }
     }
+
   ],
   withoutActiveRide: [
     {
@@ -26,16 +38,23 @@ export const driverAggregates = {
       }
     },
     {
-      $match: {
-        $or: [
-          { "rideHistories": { $size: 0 } },
-          {
-            "rideHistories.endTime": { $exists: true }
+      $addFields: {
+        activeRides: {
+          $filter: {
+            input: "$rideHistories",
+            as: "ride",
+            cond: { $not: ["$$ride.endTime"] }
           }
-        ]
+        }
+      }
+    },
+    {
+      $match: {
+        "activeRides": { $eq: [] } // No active rides
       }
     }
   ],
+
   withAllRides: [
     {
       $lookup: {

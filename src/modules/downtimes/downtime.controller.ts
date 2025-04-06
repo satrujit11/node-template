@@ -6,6 +6,7 @@ import { downtimeAggregates, downtimeQueries } from "./downtime.query";
 import DowntimeService from "./downtime.service";
 import { MRequest, MResponse } from "../../types/express";
 import { DowntimeType } from "./downtime.model";
+import { getDriverDowntimeAggregate } from "./downtime.helper";
 
 class DowntimeController {
   downtimeService = new DowntimeService();
@@ -15,6 +16,9 @@ class DowntimeController {
       allowedQueryFields: downtimeQueries,
       predefinedAggregates: downtimeAggregates,
     });
+    if (req.query.aggregate?.toString().includes("driverDowntime")) {
+      options.aggregate = getDriverDowntimeAggregate(req.query);
+    }
     const downtimes = await this.downtimeService.index(options);
     const response = SuccessResponseSchema.parse({
       message: "Downtimes fetched successfully",
@@ -69,7 +73,6 @@ class DowntimeController {
     });
     res.status(200).json(response);
   })
-
 
 }
 
