@@ -37,53 +37,6 @@ class FileUploadHandler {
     this.upload = multer({ storage });
   }
 
-  // public handleFileUploads() {
-  //   return (req: MRequest, res: MResponse, next: NextFunction) => {
-  //     console.log(req.body);
-  //     const contentType = req.headers['content-type'] || '';
-  //     const isMultipart = contentType.startsWith('multipart/form-data');
-  //
-  //     if (!isMultipart) return next(); // Skip if not multipart/form-data
-  //
-  //     this.upload.any()(req, res, (err) => {
-  //       console.log(req.files);
-  //       if (err) {
-  //         console.error("Multer file upload error:", err);
-  //
-  //         const message =
-  //           err instanceof MulterError ? err.message : 'Unknown error occurred during file upload.';
-  //
-  //         return res.status(401).json(
-  //           ErrorResponseSchema.parse({
-  //             message,
-  //             error: {
-  //               code: ErrorCodes.FILE_UPLOAD_ERROR,
-  //             },
-  //           })
-  //         );
-  //       }
-  //
-  //       if (req.files && Array.isArray(req.files)) {
-  //         req.files.forEach(file => {
-  //           const field = file.fieldname;
-  //           console.log(req.body[field]);
-  //
-  //           if (!req.body[field]) {
-  //             req.body[field] = `/uploads/${file.filename}`;
-  //           } else if (typeof req.body[field] === 'string') {
-  //             req.body[field] = [req.body[field], `/uploads/${file.filename}`];
-  //           } else if (Array.isArray(req.body[field])) {
-  //             req.body[field].push(`/uploads/${file.filename}`);
-  //           }
-  //           console.log(req.body);
-  //         });
-  //       }
-  //
-  //       next();
-  //     });
-  //   };
-  // }
-
   public handleFileUploads() {
     return (req: MRequest, res: MResponse, next: NextFunction) => {
       console.log(req.body);

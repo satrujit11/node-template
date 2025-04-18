@@ -42,6 +42,7 @@ class AdminMiddleware {
     res: MResponse,
     next: NextFunction
   ) => {
+    console.log("Hey" + req.body)
     if (req.method === "POST" && req.path === "/admin") {
       const users = await this.adminUserService.index({});
       if (users?.totalDocs === 0) {
@@ -81,6 +82,7 @@ class AdminMiddleware {
     res: MResponse,
     next: NextFunction
   ) => {
+    console.log(req.body)
     if (req.method === "POST") {
       req.body.password = req.body.password ?? "securepassword123"
     }

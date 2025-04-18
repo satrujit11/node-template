@@ -20,9 +20,9 @@ const checkAdminUserExistsWithMobileNumberInParam = checkExists(AdminUser, "mobi
 const routerAdminUser = Router();
 
 routerAdminUser.get("/", adminMiddleware.isAdmin, adminController.index);
-routerAdminUser.post("/", checkUniqueMobileNumber, adminMiddleware.isAdmin, adminMiddleware.createPassword, fileUploadHandler.handleFileUploads(), adminController.create);
-routerAdminUser.get("/:_id", checkAdminUserExists, adminMiddleware.isAdmin, adminMiddleware.createPassword, adminController.show);
-routerAdminUser.patch("/:_id", checkAdminUserExists, adminMiddleware.isAdmin, adminMiddleware.createPassword, fileUploadHandler.handleFileUploads(), adminController.update);
+routerAdminUser.post("/", checkUniqueMobileNumber, adminMiddleware.isAdmin, fileUploadHandler.handleFileUploads(), adminMiddleware.createPassword, adminController.create);
+routerAdminUser.get("/:_id", checkAdminUserExists, adminMiddleware.isAdmin, adminController.show);
+routerAdminUser.patch("/:_id", checkAdminUserExists, adminMiddleware.isAdmin, fileUploadHandler.handleFileUploads(), adminMiddleware.createPassword, adminController.update);
 routerAdminUser.delete("/:_id", checkAdminUserExists, adminMiddleware.isAdmin, adminController.delete);
 
 export default routerAdminUser;
