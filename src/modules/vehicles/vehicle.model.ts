@@ -8,6 +8,10 @@ const vehicleSchema = new mongoose.Schema<VehicleType>({
   make: { type: String, required: true },
   vehicleRCNumber: { type: String, required: true },
   VIN: { type: String, required: true },
+  vendorId: { type: mongoose.Schema.Types.ObjectId, ref: "Vendor" },
+  warehouseId: { type: mongoose.Schema.Types.ObjectId, ref: "Warehouse" },
+  rcFile: { type: String, required: true },
+  insuranceFile: { type: String, required: true },
 }, {
   timestamps: true
 });

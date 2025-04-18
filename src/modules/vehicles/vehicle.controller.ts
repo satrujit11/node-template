@@ -5,6 +5,7 @@ import { vehiclePartialSchema, vehicleSchema } from "./vehicle.interface";
 import { vehicleAggregates, vehicleQueries } from "./vehicle.query";
 import VehicleService from "./vehicle.service";
 import { MRequest, MResponse } from "../../types/express";
+import { buildMatchStage } from "./vehicle.helper";
 
 
 class VehicleController {
@@ -65,6 +66,26 @@ class VehicleController {
     const response = SuccessResponseSchema.parse({
       message: "Vehicle deleted successfully",
       data: vehicle,
+    });
+    res.status(200).json(response);
+  })
+
+
+  belongsTo = catchAsync(async (req: MRequest, res: MResponse) => {
+    const { key, _id } = req.params;
+    const matchStage = buildMatchStage(key, _id);
+
+    const options = buildPaginationOptions(req, {
+      allowedQueryFields: vehicleQueries,
+      predefinedAggregates: vehicleAggregates,
+    });
+
+    options.aggregate = [matchStage, ...options.aggregate];
+
+    const vehicles = await this.vehicleService.index(options);
+    const response = SuccessResponseSchema.parse({
+      message: "Vehicles fetched successfully",
+      data: vehicles,
     });
     res.status(200).json(response);
   })

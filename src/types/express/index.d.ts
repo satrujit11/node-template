@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
+import { AdminUserType } from "../../modules/admins/admin.model";
 
 export interface MRequest extends Request {
-  userId?: string;
+  user?: AdminUserType;
   foundDoc?: unknown;
 }
 
