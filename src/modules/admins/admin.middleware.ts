@@ -42,7 +42,7 @@ class AdminMiddleware {
     res: MResponse,
     next: NextFunction
   ) => {
-    console.log("Hey" + req.body)
+    console.log("Hey" + req.body.password)
     if (req.method === "POST" && req.path === "/admin") {
       const users = await this.adminUserService.index({});
       if (users?.totalDocs === 0) {
