@@ -2,13 +2,13 @@ import { Router } from "express";
 import VehicleController from "./vehicle.controller";
 import { checkExists, checkUnique } from "../../middleware/middlewareHandler";
 import { Vehicle } from "./vehicle.model";
-import FileUploadHandler from "../../config/file-upload";
+import S3FileUploadHandler from "../../config/s3-file-upload";
 
 // Controllers
 const vehicleController = new VehicleController();
 
 // Middlewares
-const fileUploadHandler = new FileUploadHandler('../public/uploads')
+const fileUploadHandler = new S3FileUploadHandler('uploads')
 const checkUniqueVehicleRCNumber = checkUnique(Vehicle, "vehicleRCNumber", "body", "Vehicle RC number already exists")
 const checkUniqueVINNumber = checkUnique(Vehicle, "VIN", "body", "VIN number already exists")
 const checkVehicleExists = checkExists(Vehicle, "_id", "params", "Vehicle not found")

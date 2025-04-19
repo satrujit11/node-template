@@ -4,13 +4,14 @@ import { checkExists, checkUnique } from "../../middleware/middlewareHandler";
 import { AdminUser } from "./admin.model";
 import AdminMiddleware from "./admin.middleware";
 import FileUploadHandler from "../../config/file-upload";
+import S3FileUploadHandler from "../../config/s3-file-upload";
 
 // Controllers
 const adminController = new AdminUserController();
 
 // Middlewares
 const adminMiddleware = new AdminMiddleware()
-const fileUploadHandler = new FileUploadHandler('../public/uploads')
+const fileUploadHandler = new S3FileUploadHandler('uploads')
 const checkUniqueMobileNumber = checkUnique(AdminUser, "mobileNumber", "body", "Mobile number already exists")
 const checkAdminUserExists = checkExists(AdminUser, "_id", "params", "AdminUser not found")
 const checkAdminUserExistsWithMobileNumber = checkExists(AdminUser, "mobileNumber", "body", "AdminUser not found")

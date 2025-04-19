@@ -2,13 +2,13 @@ import { Router } from "express";
 import DriverController from "./driver.controller";
 import { checkExists, checkUnique } from "../../middleware/middlewareHandler";
 import { Driver } from "./driver.model";
-import FileUploadHandler from "../../config/file-upload";
+import S3FileUploadHandler from "../../config/s3-file-upload";
 
 // Controllers
 const driverController = new DriverController();
 
 // Middlewares
-const fileUploadHandler = new FileUploadHandler('../public/uploads')
+const fileUploadHandler = new S3FileUploadHandler('uploads')
 const checkUniqueMobileNumber = checkUnique(Driver, "mobileNumber", "body", "Mobile number already exists")
 const checkDriverExists = checkExists(Driver, "_id", "params", "Driver not found")
 
