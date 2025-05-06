@@ -155,6 +155,29 @@ export function buildPaginationOptions(
   // }
   //
   //
+  let searchMatch: any = null;
+
+  console.log("Search Query: ", req.query.search);
+
+  if (req.query.search) {
+    try {
+      const parsedSearch = JSON.parse(req.query.search as any);
+
+      if (typeof parsedSearch !== 'object' || Array.isArray(parsedSearch)) {
+        throw new Error('Search must be a JSON object');
+      }
+
+      const orConditions = Object.entries(parsedSearch).map(([field, value]) => ({
+        [field]: { $regex: value, $options: 'i' } // case-insensitive
+      }));
+
+      if (orConditions.length) {
+        searchMatch = { $match: { $or: orConditions } };
+      }
+    } catch {
+      throw new Error('Invalid search JSON string');
+    }
+  }
   // 🔐 Safe Aggregation — MULTIPLE aggregates
   if (config.predefinedAggregates && req.query.aggregate) {
     const requested = req.query.aggregate as string | string[] | undefined;
@@ -169,15 +192,31 @@ export function buildPaginationOptions(
       return config.predefinedAggregates![key];
     });
 
-    // 👇 Add $match stage if query exists
+    if (searchMatch) {
+      validPipelines.unshift(searchMatch);
+    }
+
     if (options.query) {
       validPipelines.unshift({ $match: options.query });
-      delete options.query; // Remove to avoid conflict
+      delete options.query; // ✅ Safe here because we're in aggregation mode
     }
 
     options.aggregate = validPipelines;
+  } else if (searchMatch) {
+    // 👇 Do NOT override options.query — merge if it exists
+    if (options.query) {
+      options.query = {
+        $and: [
+          options.query,
+          { $or: searchMatch.$match.$or }
+        ]
+      };
+    } else {
+      options.query = { $or: searchMatch.$match.$or };
+    }
   }
-  // console.log(options);
+
+  console.log(options);
 
   return options;
 }
