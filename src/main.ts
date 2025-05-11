@@ -16,7 +16,6 @@ const app = express();
 const port = Number(process.env.PORT) || 3000;
 
 app.use(cors());
-debugger
 app.options('*', cors());
 
 app.use('/api/v1/uploads', express.static(path.resolve(__dirname, '../public/uploads')));
